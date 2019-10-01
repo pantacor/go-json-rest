@@ -26,6 +26,9 @@ type ResponseWriter interface {
 	// middlewares.
 	EncodeJson(v interface{}) ([]byte, error)
 
+	// Identical to the http.ResponseWriter interface
+	Write([]byte) (int, error)
+
 	// Similar to the http.ResponseWriter interface, with additional JSON related
 	// headers set.
 	WriteHeader(int)

@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"net/http"
 	"testing"
 
 	"github.com/ant0ine/go-json-rest/rest/test"
@@ -65,4 +66,12 @@ func TestNotFoundResponse(t *testing.T) {
 	recorded.CodeIs(404)
 	recorded.ContentTypeIsJson()
 	recorded.BodyIs("{\"Error\":\"Resource not found\"}")
+}
+
+func TestResponseWriterCanBeUsedAsHttpResponseWriter(t *testing.T) {
+	var resp ResponseWriter = &responseWriter{}
+	var httpResp http.ResponseWriter = resp
+	if httpResp == nil {
+		t.Error("ResponseWriter was the expected to be compatible with http.ResponseWriter")
+	}
 }
