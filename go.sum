@@ -1,0 +1,4 @@
+github.com/ant0ine/go-json-rest v3.3.2+incompatible h1:nBixrkLFiDNAW0hauKDLc8yJI6XfrQumWvytE1Hk14E=
+github.com/ant0ine/go-json-rest v3.3.2+incompatible/go.mod h1:q6aCt0GfU6LhpBsnZ/2U+mwe+0XB5WStbmwyoPfc+sk=
+github.com/miolini/datacounter v1.0.3 h1:tanOZPVblGXQl7/bSZWoEM8l4KK83q24qwQLMrO/HOA=
+github.com/miolini/datacounter v1.0.3/go.mod h1:C45dc2hBumHjDpEU64IqPwR6TDyPVpzOqqRTN7zmBUA=

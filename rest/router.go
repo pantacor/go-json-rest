@@ -2,11 +2,17 @@ package rest
 
 import (
 	"errors"
-	"github.com/ant0ine/go-json-rest/rest/trie"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/ant0ine/go-json-rest/rest/trie"
 )
+
+type RouterApp interface {
+	App
+	FindRoute(httpMethod string, url *url.URL) (*Route, map[string]string, bool, error)
+}
 
 type router struct {
 	Routes []*Route
@@ -18,7 +24,7 @@ type router struct {
 
 // MakeRouter returns the router app. Given a set of Routes, it dispatches the request to the
 // HandlerFunc of the first route that matches. The order of the Routes matters.
-func MakeRouter(routes ...*Route) (App, error) {
+func MakeRouter(routes ...*Route) (RouterApp, error) {
 	r := &router{
 		Routes: routes,
 	}
@@ -50,6 +56,7 @@ func (rt *router) AppFunc() HandlerFunc {
 
 		// a route was found, set the PathParams
 		request.PathParams = params
+		request.Header.Add("route", route.PathExp)
 
 		// run the user code
 		handler := route.Func
@@ -131,7 +138,7 @@ func (rt *router) start() error {
 		rt.index[route] = i
 	}
 
-	if rt.disableTrieCompression == false {
+	if !rt.disableTrieCompression {
 		rt.trie.Compress()
 	}
 
@@ -181,14 +188,7 @@ func (rt *router) findRouteFromURL(httpMethod string, urlObj *url.URL) (*Route, 
 }
 
 // Parse the url string (complete or just the path) and return the first matching Route and the corresponding parameters.
-func (rt *router) findRoute(httpMethod, urlStr string) (*Route, map[string]string, bool, error) {
-
-	// parse the url
-	urlObj, err := url.Parse(urlStr)
-	if err != nil {
-		return nil, nil, false, err
-	}
-
-	route, params, pathMatched := rt.findRouteFromURL(httpMethod, urlObj)
+func (rt *router) FindRoute(httpMethod string, url *url.URL) (*Route, map[string]string, bool, error) {
+	route, params, pathMatched := rt.findRouteFromURL(httpMethod, url)
 	return route, params, pathMatched, nil
 }
